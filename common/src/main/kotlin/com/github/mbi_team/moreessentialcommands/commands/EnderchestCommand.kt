@@ -1,0 +1,71 @@
+package com.github.mbi_team.moreessentialcommands.commands
+
+import com.mojang.brigadier.builder.LiteralArgumentBuilder
+import net.minecraft.commands.CommandSourceStack
+import net.minecraft.commands.arguments.EntityArgument
+import net.minecraft.network.chat.Component
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.SimpleMenuProvider
+import net.minecraft.world.entity.player.Inventory
+import net.minecraft.world.inventory.AbstractContainerMenu
+import net.minecraft.world.inventory.ChestMenu
+import net.minecraft.world.inventory.MenuType
+
+class EnderchestCommand : BaseCommand() {
+    override val name = "enderchest"
+    override val permissionLevel = 2
+    
+    override fun configure(builder: LiteralArgumentBuilder<CommandSourceStack>) {
+        builder
+            // /enderchest <player>
+            .then(net.minecraft.commands.Commands.argument("target", EntityArgument.player())
+                .executes { context ->
+                    val sourcePlayer = context.source.player
+                    val targetPlayer = EntityArgument.getPlayer(context, "target")
+                    
+                    if (sourcePlayer != null && targetPlayer != null) {
+                        openEnderchestScreen(sourcePlayer, targetPlayer)
+                        sourcePlayer.sendSystemMessage(Component.literal("Opened enderchest of ${targetPlayer.name.string}"))
+                        1
+                    } else {
+                        context.source.sendSystemMessage(Component.literal("This command can only be used by players"))
+                        0
+                    }
+                }
+            )
+            // /enderchest (open own enderchest)
+            .executes { context ->
+                val player = context.source.player
+                if (player != null) {
+                    player.openEnderchestMenu(player.position())
+                    player.sendSystemMessage(Component.literal("Opened your enderchest"))
+                    1
+                } else {
+                    context.source.sendSystemMessage(Component.literal("This command can only be used by players"))
+                    0
+                }
+            }
+    }
+    
+    private fun openEnderchestScreen(source: ServerPlayer, target: ServerPlayer) {
+        val containerId = source.nextContainerCounter()
+        val menuProvider = object : SimpleMenuProvider({
+            id: Int, playerInventory: Inventory, player: net.minecraft.world.entity.player.Player ->
+            createEnderchestMenu(id, playerInventory, target)
+        }, Component.literal("${target.name.string}'s Enderchest")) {}
+        
+        source.openMenu(menuProvider, containerId, source.position())
+    }
+    
+    private fun createEnderchestMenu(
+        id: Int,
+        playerInventory: Inventory,
+        target: ServerPlayer
+    ): AbstractContainerMenu {
+        // Create a chest menu that shows the target's enderchest
+        // This is a simplified implementation, in a real mod you'd create a custom menu
+        return ChestMenu.MenuConstructor { containerId, inventory, _ ->
+            ChestMenu(MenuType.GENERIC_9x3, containerId, inventory, target.enderChestInventory, 3)
+        }.createMenu(id, playerInventory, target)
+    }
+}

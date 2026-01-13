@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "id": "moreessentialcommands",
+  "version": "${version}",
+  "name": "More Essential Commands",
+  "description": "A lightweight, high-performance, cross-platform Minecraft command enhancement mod",
+  "authors": [
+    "MBI Team"
+  ],
+  "contact": {
+    "homepage": "https://github.com/mbi-team/More-Essential-Commands",
+    "sources": "https://github.com/mbi-team/More-Essential-Commands"
+  },
+  "license": "LGPL-3.0-or-later",
+  "icon": "assets/moreessentialcommands/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.github.mbi_team.moreessentialcommands.fabric.MoreEssentialCommandsFabric"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.15.6",
+    "minecraft": "~1.21.1",
+    "java": ">=17",
+    "fabric-api": "*"
+  },
+  "suggests": {
+    "another-mod": "*"
+  }
+}

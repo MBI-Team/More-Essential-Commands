@@ -1,0 +1,27 @@
+modLoader="javafml"
+loaderVersion="[45,)"
+license="LGPL-3.0-or-later"
+
+[[mods]]
+modId="moreessentialcommands"
+version="${version}"
+displayName="More Essential Commands"
+authors="MBI Team"
+description="A lightweight, high-performance, cross-platform Minecraft command enhancement mod"
+homepage="https://github.com/mbi-team/More-Essential-Commands"
+sources="https://github.com/mbi-team/More-Essential-Commands"
+icon="assets/moreessentialcommands/icon.png"
+
+[[dependencies.moreessentialcommands]]
+modId="neoforge"
+mandatory=true
+versionRange="[21.1.0,)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.moreessentialcommands]]
+modId="minecraft"
+mandatory=true
+versionRange="[1.21.1,)"
+ordering="NONE"
+side="BOTH"
